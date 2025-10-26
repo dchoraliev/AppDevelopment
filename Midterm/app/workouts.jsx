@@ -1,5 +1,6 @@
+// app/workouts.jsx
 import { SafeAreaView } from "react-native-safe-area-context";
-import { FlatList, ActivityIndicator, StyleSheet } from "react-native";
+import { FlatList, ActivityIndicator, StyleSheet, View } from "react-native";
 import { useEffect, useState } from "react";
 import { Stack } from "expo-router";
 import { useTheme, Text, Card } from "react-native-paper";
@@ -8,11 +9,6 @@ export default function WorkoutsScreen() {
   const [workouts, setWorkouts] = useState([]);
   const [loading, setLoading] = useState(true);
   const theme = useTheme();
-
-  const textColor =
-    theme.dark || theme.colors.surfaceContainer?.startsWith("#") === "#1"
-      ? "#fff"
-      : "#000";
 
   useEffect(() => {
     const loadWorkouts = async () => {
@@ -39,22 +35,64 @@ export default function WorkoutsScreen() {
 
   const renderWorkout = ({ item }) => (
     <Card
-      style={[styles.card, { backgroundColor: theme.colors.surfaceContainer }]}
+      style={[
+        styles.card,
+        {
+          backgroundColor:
+            theme.colors.surfaceContainer || theme.colors.surface,
+        },
+      ]}
     >
       <Card.Content>
-        <Text variant="headlineSmall" style={{ color: theme.colors.onSurface }}>
-          {item.name}
+        <Text
+          variant="titleLarge"
+          style={{
+            color: theme.colors.onSurface,
+            fontFamily: "ComicRelief-Bold",
+          }}
+        >
+          {item.title}
         </Text>
-        <Text variant="bodyMedium" style={{ color: theme.colors.onSurface }}>
-          {item.description}
-        </Text>
+
+        <View style={{ marginTop: 6 }}>
+          <Text
+            variant="bodyMedium"
+            style={{
+              color: theme.colors.onSurfaceVariant,
+              fontFamily: "ComicRelief-Regular",
+            }}
+          >
+            💪 Muscle Groups: {item.muscleGroups}
+          </Text>
+          <Text
+            variant="bodyMedium"
+            style={{
+              color: theme.colors.onSurfaceVariant,
+              fontFamily: "ComicRelief-Regular",
+            }}
+          >
+            ⚙️ Difficulty: {item.difficulty}
+          </Text>
+          <Text
+            variant="bodyMedium"
+            style={{
+              color: theme.colors.onSurfaceVariant,
+              fontFamily: "ComicRelief-Regular",
+            }}
+          >
+            ⏱ Duration: {item.duration} minutes
+          </Text>
+        </View>
       </Card.Content>
     </Card>
   );
 
   return (
     <SafeAreaView
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
+      style={[
+        styles.container,
+        { backgroundColor: theme.colors.background },
+      ]}
     >
       <Stack.Screen options={{ title: "Workouts" }} />
       <FlatList
@@ -70,11 +108,11 @@ export default function WorkoutsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
+    padding: 12,
   },
   list: {
     paddingBottom: 20,
-    gap: 10,
+    gap: 12,
   },
   loadingContainer: {
     flex: 1,
@@ -82,8 +120,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   card: {
-    padding: 10,
-    borderRadius: 10,
+    borderRadius: 12,
     elevation: 3,
+    padding: 8,
   },
 });
