@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "title": "Full Body Blast",
+    "muscleGroups": "Chest, Legs, Back",
+    "difficulty": "Intermediate",
+    "duration": 45
+  },
+  {
+    "id": 2,
+    "title": "Upper Body Strength",
+    "muscleGroups": "Arms, Shoulders, Chest",
+    "difficulty": "Advanced",
+    "duration": 60
+  },
+  {
+    "id": 3,
+    "title": "Core Crusher",
+    "muscleGroups": "Abs, Obliques",
+    "difficulty": "Beginner",
+    "duration": 30
+  }
+]
