@@ -1,15 +1,16 @@
-// app/_layout.jsx
 import * as React from "react";
-import { Stack } from "expo-router";
 import { useColorScheme } from "react-native";
-import {
-  PaperProvider,
-  MD3LightTheme,
-  MD3DarkTheme,
-  configureFonts,
-} from "react-native-paper";
+import { PaperProvider, MD3LightTheme, MD3DarkTheme, configureFonts } from "react-native-paper";
 import { useFonts } from "expo-font";
 import themeJSON from "../assets/theme/material-theme.json";
+import { Stack, Tabs } from "expo-router";
+
+// --- Auth Context ---
+export const AuthContext = React.createContext({
+  loggedIn: false,
+  login: () => {},
+  logout: () => {},
+});
 
 const lightColors = themeJSON.schemes?.light ?? {};
 const darkColors = themeJSON.schemes?.dark ?? {};
@@ -43,6 +44,7 @@ export default function RootLayout() {
     "ComicRelief-Bold": require("../assets/fonts/ComicRelief-Bold.ttf"),
   });
 
+  const [loggedIn, setLoggedIn] = React.useState(false);
   const scheme = useColorScheme();
 
   const theme = React.useMemo(() => {
@@ -52,9 +54,33 @@ export default function RootLayout() {
 
   if (!fontsLoaded) return null;
 
+  const auth = {
+    loggedIn,
+    login: () => setLoggedIn(true),
+    logout: () => setLoggedIn(false),
+  };
+
   return (
-    <PaperProvider theme={theme}>
-      <Stack screenOptions={{ headerShown: false }} />
-    </PaperProvider>
+    <AuthContext.Provider value={auth}>
+      <PaperProvider theme={theme}>
+        
+        {loggedIn ? (
+          <Tabs
+            screenOptions={{
+              headerShown: false,
+              tabBarShowLabel:false,
+              tabBarStyle:{height:0},
+              tabBarActiveTintColor: theme.colors.primary,
+            }}
+          >
+          </Tabs>
+        ) : (
+          // Stack layout for login screen
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="login" />
+          </Stack>
+        )}
+      </PaperProvider>
+    </AuthContext.Provider>
   );
 }

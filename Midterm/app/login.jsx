@@ -20,7 +20,7 @@ export default function LoginScreen() {
     }
 
     // Navigate to workouts after successful login
-    router.push("/workouts");
+    router.push("/(tabs)/workouts");
   };
 
   return (

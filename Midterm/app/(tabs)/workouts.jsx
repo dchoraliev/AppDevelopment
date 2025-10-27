@@ -1,4 +1,3 @@
-// app/workouts.jsx
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FlatList, ActivityIndicator, StyleSheet, View } from "react-native";
 import { useEffect, useState } from "react";
@@ -7,11 +6,10 @@ import {
   useTheme,
   Text,
   Card,
-  FAB,
-  Portal,
+  Button,
   Dialog,
   TextInput,
-  Button,
+  Portal,
 } from "react-native-paper";
 
 export default function WorkoutsScreen() {
@@ -29,7 +27,7 @@ export default function WorkoutsScreen() {
   useEffect(() => {
     const loadWorkouts = async () => {
       try {
-        const data = require("../assets/workouts.json");
+        const data = require("../../assets/workouts.json");
         setWorkouts(data);
       } catch (err) {
         console.error("Error loading workouts:", err);
@@ -69,59 +67,79 @@ export default function WorkoutsScreen() {
     );
   }
 
-  const renderWorkout = ({ item }) => (
-    <Card
-      style={[
-        styles.card,
-        {
-          backgroundColor:
-            theme.colors.surfaceContainer || theme.colors.surface,
-        },
-      ]}
-    >
-      <Card.Content>
-        <Text
-          variant="titleLarge"
-          style={{
-            color: theme.colors.onSurface,
-            fontFamily: "ComicRelief-Bold",
-          }}
+  const renderWorkout = ({ item }) => {
+    if (item.isAddButton) {
+      // Render "Add Workout" button as list item
+      return (
+        <Button
+          mode="contained"
+          buttonColor={theme.colors.primary}
+          textColor={theme.colors.onPrimary}
+          style={styles.addButton}
+          onPress={() => setDialogVisible(true)}
         >
-          {item.title}
-        </Text>
+          + Add Workout
+        </Button>
+      );
+    }
 
-        <View style={{ marginTop: 6 }}>
+    return (
+      <Card
+        style={[
+          styles.card,
+          {
+            backgroundColor:
+              theme.colors.surfaceContainer || theme.colors.surface,
+          },
+        ]}
+      >
+        <Card.Content>
           <Text
-            variant="bodyMedium"
+            variant="titleLarge"
             style={{
-              color: theme.colors.onSurfaceVariant,
-              fontFamily: "ComicRelief-Regular",
+              color: theme.colors.onSurface,
+              fontFamily: "ComicRelief-Bold",
             }}
           >
-            💪 Muscle Groups: {item.muscleGroups}
+            {item.title}
           </Text>
-          <Text
-            variant="bodyMedium"
-            style={{
-              color: theme.colors.onSurfaceVariant,
-              fontFamily: "ComicRelief-Regular",
-            }}
-          >
-            ⚙️ Difficulty: {item.difficulty}
-          </Text>
-          <Text
-            variant="bodyMedium"
-            style={{
-              color: theme.colors.onSurfaceVariant,
-              fontFamily: "ComicRelief-Regular",
-            }}
-          >
-            ⏱ Duration: {item.duration} minutes
-          </Text>
-        </View>
-      </Card.Content>
-    </Card>
-  );
+
+          <View style={{ marginTop: 6 }}>
+            <Text
+              variant="bodyMedium"
+              style={{
+                color: theme.colors.onSurfaceVariant,
+                fontFamily: "ComicRelief-Regular",
+              }}
+            >
+              Muscle Groups: {item.muscleGroups}
+            </Text>
+            <Text
+              variant="bodyMedium"
+              style={{
+                color: theme.colors.onSurfaceVariant,
+                fontFamily: "ComicRelief-Regular",
+              }}
+            >
+              Difficulty: {item.difficulty}
+            </Text>
+            <Text
+              variant="bodyMedium"
+              style={{
+                color: theme.colors.onSurfaceVariant,
+                fontFamily: "ComicRelief-Regular",
+              }}
+            >
+              Duration: {item.duration} minutes
+            </Text>
+          </View>
+        </Card.Content>
+      </Card>
+    );
+  };
+
+  // Append a "Add Workout" pseudo-item
+  const listData = [...workouts, { id: "add-button", isAddButton: true }];
 
   return (
     <SafeAreaView
@@ -133,22 +151,14 @@ export default function WorkoutsScreen() {
       <Stack.Screen options={{ title: "Workouts" }} />
 
       <FlatList
-        data={workouts}
+        data={listData}
         keyExtractor={(item) => item.id.toString()}
         renderItem={renderWorkout}
         contentContainerStyle={styles.list}
       />
 
-      {/* Add Workout Button */}
+      {/* Add Workout Dialog */}
       <Portal>
-        <FAB
-          icon="plus"
-          style={styles.fab}
-          color="white"
-          onPress={() => setDialogVisible(true)}
-        />
-
-        {/* Add Workout Dialog */}
         <Dialog
           visible={dialogVisible}
           onDismiss={() => setDialogVisible(false)}
@@ -205,7 +215,8 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   list: {
-    paddingBottom: 80,
+padding:0,
+margin:0,
     gap: 12,
   },
   loadingContainer: {
@@ -218,13 +229,12 @@ const styles = StyleSheet.create({
     elevation: 3,
     padding: 8,
   },
-  fab: {
-    position: "absolute",
-    right: 16,
-    bottom: 16,
-    backgroundColor: "#6200EE",
-  },
   input: {
     marginBottom: 10,
+  },
+  addButton: {
+    marginTop: 8,
+    borderRadius: 12,
+    paddingVertical: 10,
   },
 });
