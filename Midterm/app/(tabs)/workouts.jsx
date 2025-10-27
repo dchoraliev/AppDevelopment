@@ -1,6 +1,6 @@
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FlatList, ActivityIndicator, StyleSheet, View } from "react-native";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Stack } from "expo-router";
 import {
   useTheme,
@@ -22,6 +22,7 @@ export default function WorkoutsScreen() {
     difficulty: "",
     duration: "",
   });
+  const [searchQuery, setSearchQuery] = useState("");
   const theme = useTheme();
 
   useEffect(() => {
@@ -35,7 +36,6 @@ export default function WorkoutsScreen() {
         setLoading(false);
       }
     };
-
     loadWorkouts();
   }, []);
 
@@ -59,6 +59,12 @@ export default function WorkoutsScreen() {
     setNewWorkout({ title: "", muscleGroups: "", difficulty: "", duration: "" });
   };
 
+  const filteredWorkouts = useMemo(() => {
+    return workouts.filter((w) =>
+      w.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [workouts, searchQuery]);
+
   if (loading) {
     return (
       <SafeAreaView style={styles.loadingContainer}>
@@ -69,7 +75,6 @@ export default function WorkoutsScreen() {
 
   const renderWorkout = ({ item }) => {
     if (item.isAddButton) {
-      // Render "Add Workout" button as list item
       return (
         <Button
           mode="contained"
@@ -87,10 +92,7 @@ export default function WorkoutsScreen() {
       <Card
         style={[
           styles.card,
-          {
-            backgroundColor:
-              theme.colors.surfaceContainer || theme.colors.surface,
-          },
+          { backgroundColor: theme.colors.surfaceContainer || theme.colors.surface },
         ]}
       >
         <Card.Content>
@@ -138,17 +140,19 @@ export default function WorkoutsScreen() {
     );
   };
 
-  // Append a "Add Workout" pseudo-item
-  const listData = [...workouts, { id: "add-button", isAddButton: true }];
+  const listData = [...filteredWorkouts, { id: "add-button", isAddButton: true }];
 
   return (
-    <SafeAreaView
-      style={[
-        styles.container,
-        { backgroundColor: theme.colors.background },
-      ]}
-    >
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <Stack.Screen options={{ title: "Workouts" }} />
+
+      <TextInput
+        placeholder="Search workouts..."
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+        mode="outlined"
+        style={styles.searchInput}
+      />
 
       <FlatList
         data={listData}
@@ -157,45 +161,33 @@ export default function WorkoutsScreen() {
         contentContainerStyle={styles.list}
       />
 
-      {/* Add Workout Dialog */}
       <Portal>
-        <Dialog
-          visible={dialogVisible}
-          onDismiss={() => setDialogVisible(false)}
-        >
+        <Dialog visible={dialogVisible} onDismiss={() => setDialogVisible(false)}>
           <Dialog.Title>Add Workout</Dialog.Title>
           <Dialog.Content>
             <TextInput
               label="Title"
               value={newWorkout.title}
-              onChangeText={(text) =>
-                setNewWorkout({ ...newWorkout, title: text })
-              }
+              onChangeText={(text) => setNewWorkout({ ...newWorkout, title: text })}
               style={styles.input}
             />
             <TextInput
               label="Muscle Groups"
               value={newWorkout.muscleGroups}
-              onChangeText={(text) =>
-                setNewWorkout({ ...newWorkout, muscleGroups: text })
-              }
+              onChangeText={(text) => setNewWorkout({ ...newWorkout, muscleGroups: text })}
               style={styles.input}
             />
             <TextInput
               label="Difficulty"
               value={newWorkout.difficulty}
-              onChangeText={(text) =>
-                setNewWorkout({ ...newWorkout, difficulty: text })
-              }
+              onChangeText={(text) => setNewWorkout({ ...newWorkout, difficulty: text })}
               style={styles.input}
             />
             <TextInput
               label="Duration (minutes)"
               keyboardType="numeric"
               value={newWorkout.duration}
-              onChangeText={(text) =>
-                setNewWorkout({ ...newWorkout, duration: text })
-              }
+              onChangeText={(text) => setNewWorkout({ ...newWorkout, duration: text })}
               style={styles.input}
             />
           </Dialog.Content>
@@ -205,7 +197,7 @@ export default function WorkoutsScreen() {
           </Dialog.Actions>
         </Dialog>
       </Portal>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -214,9 +206,11 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 12,
   },
+  searchInput: {
+    marginBottom: 12,
+  },
   list: {
-padding:0,
-margin:0,
+    paddingBottom: 20,
     gap: 12,
   },
   loadingContainer: {
