@@ -1,6 +1,7 @@
 // app/(tabs)/settings.jsx
-import { SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import { Text, Card, Switch, Divider, useTheme, Button } from "react-native-paper";
+import { SafeAreaView } from "react-native-safe-area-context";
 import * as React from "react"; 
 
 export default function SettingsScreen() {

@@ -10,10 +10,14 @@ export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <Stack.Screen options={{ title: "Home", headerShown: false }} />
-
+      
       <View style={styles.header}>
+        <Image
+          source={require("../assets/logo.png")}
+          style={{ width: 100, height: 100, marginBottom: 20 }}
+        />
         <Text variant="headlineMedium" style={{ color: theme.colors.primary }}>
-          Team 1 Fitness Tracker
+          GymSync
         </Text>
         <Text variant="bodyMedium" style={{ color: theme.colors.onBackground }}>
           CS3720 - Mobile App Development
