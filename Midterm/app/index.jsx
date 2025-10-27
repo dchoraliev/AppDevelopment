@@ -1,6 +1,6 @@
 import { Stack, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet,Image } from "react-native";
 import { Text, Button, useTheme } from "react-native-paper";
 
 export default function HomeScreen() {
