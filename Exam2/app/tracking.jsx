@@ -46,7 +46,6 @@ export default function TrackingScreen() {
           }}
         />
 
-        {/* Draw face boxes */}
         {faces.map((face) => {
           const box = face.bounds;
 
@@ -74,7 +73,6 @@ export default function TrackingScreen() {
   );
 }
 
-/* styles */
 const styles = StyleSheet.create({
   container: {
     flex: 1,
