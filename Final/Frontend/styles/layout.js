@@ -5,97 +5,59 @@ export const layout = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: theme.colors.background,
-    paddingHorizontal: theme.spacing.lg,
-    paddingTop: 60,
   },
-  screenCentered: {
+  safeArea: {
     flex: 1,
     backgroundColor: theme.colors.background,
-    paddingHorizontal: theme.spacing.lg,
-    justifyContent: "center",
   },
+  content: {
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingTop: 10,
+  },
+
   header: {
-    marginBottom: theme.spacing.lg,
+    paddingVertical: 12,
+    marginBottom: 10,
   },
+
+  container: {
+    paddingBottom: 20,
+  },
+
   navRow: {
     flexDirection: "row",
+    alignItems: "center",
     justifyContent: "space-between",
-    alignItems: "center",
-    gap: theme.spacing.sm,
+    marginBottom: 12,
+    gap: 10,
   },
+
   primaryButton: {
-    backgroundColor: theme.colors.primary,
-    borderRadius: theme.radius.pill,
-    paddingHorizontal: theme.spacing.lg,
-    paddingVertical: theme.spacing.sm,
-    justifyContent: "center",
+    backgroundColor: "#000000",
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 999,
     alignItems: "center",
+    justifyContent: "center",
   },
+
   outlineButton: {
+    backgroundColor: "transparent",
     borderWidth: 1,
     borderColor: theme.colors.border,
-    borderRadius: theme.radius.pill,
-    paddingHorizontal: theme.spacing.md,
-    paddingVertical: theme.spacing.sm,
-    justifyContent: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 999,
     alignItems: "center",
+    justifyContent: "center",
   },
-  card: {
-    backgroundColor: theme.colors.card,
-    borderRadius: theme.radius.md,
-    padding: theme.spacing.md,
-    marginBottom: theme.spacing.sm,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-  },
-  form: {
-    marginTop: theme.spacing.lg,
-  },
-  formScroll: {
-    paddingHorizontal: theme.spacing.lg,
-    paddingTop: 60,
-    paddingBottom: theme.spacing.xl,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    borderRadius: theme.radius.pill,
-    paddingHorizontal: theme.spacing.md,
-    paddingVertical: theme.spacing.sm,
-    marginBottom: theme.spacing.sm,
-    backgroundColor: theme.colors.card,
-  },
-  textarea: {
-    borderRadius: theme.radius.md,
-    minHeight: 80,
-    textAlignVertical: "top",
-  },
-  exerciseCard: {
-    backgroundColor: theme.colors.card,
-    borderRadius: theme.radius.md,
-    padding: theme.spacing.md,
-    marginTop: theme.spacing.sm,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-  },
-  row: {
-    flexDirection: "row",
-    gap: theme.spacing.sm,
-  },
-  rowItem: {
-    flex: 1,
-  },
-  linkButton: {
-    marginTop: theme.spacing.sm,
-  },
+
   emptyState: {
-    marginTop: theme.spacing.xl,
+    marginTop: 40,
     alignItems: "center",
-  },
-  authFooterRow: {
-    flexDirection: "row",
     justifyContent: "center",
-    marginTop: theme.spacing.md,
-    gap: theme.spacing.xs,
+    paddingHorizontal: 12,
+    gap: 6,
   },
 });
