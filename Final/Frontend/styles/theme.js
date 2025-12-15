@@ -1,11 +1,27 @@
-export const colors = {
-  background: "#F4F4F5",
+import { useColorScheme } from "react-native";
+
+
+
+export const colors = 
+useColorScheme === "dark"?
+{
+  background: "#313131",
   card: "#FFFFFF",
   primary: "#111827",
   primaryText: "#FFFFFF",
   text: "#111827",
   muted: "#9CA3AF",
   border: "#E5E7EB",
+  danger: "#B91C1C",
+}:
+{
+  background: "#F4F4F5",
+  card: "#FFFFFF",
+  primary: "#111827",
+  primaryText: "#FFFFFF",
+  text: "#111827",
+  muted: "#9CA3AF",
+  border: "#d3d4d7",
   danger: "#B91C1C",
 };
 

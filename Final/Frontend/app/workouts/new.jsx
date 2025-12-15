@@ -167,14 +167,14 @@ export default function NewWorkoutScreen() {
             placeholder="Workout title"
             value={form.title}
             onChangeText={(v) => setField("title", v)}
-            style={layout.outlineButton}
+            style={layout.outlineTextBox}
           />
 
           <TextInput
             placeholder="Description (optional)"
             value={form.description}
             onChangeText={(v) => setField("description", v)}
-            style={layout.outlineButton}
+            style={layout.outlineTextBox}
             multiline
           />
 
@@ -182,14 +182,14 @@ export default function NewWorkoutScreen() {
             placeholder="Muscle group"
             value={form.muscleGroup}
             onChangeText={(v) => setField("muscleGroup", v)}
-            style={layout.outlineButton}
+            style={layout.outlineTextBox}
           />
 
           <TextInput
             placeholder="Difficulty"
             value={form.difficulty}
             onChangeText={(v) => setField("difficulty", v)}
-            style={layout.outlineButton}
+            style={layout.outlineTextBox}
           />
 
           <TextInput
@@ -197,7 +197,7 @@ export default function NewWorkoutScreen() {
             value={form.duration}
             onChangeText={(v) => setField("duration", v)}
             keyboardType="numeric"
-            style={layout.outlineButton}
+            style={layout.outlineTextBox}
           />
 
           <Text style={textStyles.sectionTitle}>Exercises</Text>
@@ -217,33 +217,33 @@ export default function NewWorkoutScreen() {
                 placeholder="Exercise name"
                 value={ex.name}
                 onChangeText={(v) => setExercise(index, "name", v)}
-                style={layout.outlineButton}
+                style={layout.outlineTextBox}
               />
               <TextInput
                 placeholder="Sets"
                 value={ex.sets}
                 onChangeText={(v) => setExercise(index, "sets", v)}
                 keyboardType="numeric"
-                style={layout.outlineButton}
+                style={layout.outlineTextBox}
               />
               <TextInput
                 placeholder="Reps"
                 value={ex.reps}
                 onChangeText={(v) => setExercise(index, "reps", v)}
                 keyboardType="numeric"
-                style={layout.outlineButton}
+                style={layout.outlineTextBox}
               />
               <TextInput
                 placeholder="Weight"
                 value={ex.weight}
                 onChangeText={(v) => setExercise(index, "weight", v)}
                 keyboardType="numeric"
-                style={layout.outlineButton}
+                style={layout.outlineTextBox}
               />
 
               {form.exercises.length > 1 && (
                 <TouchableOpacity onPress={() => removeExercise(index)}>
-                  <Text style={{ color: "red" }}>Remove exercise</Text>
+                  <Text style={{backgroundColor:'#be0505',padding:10, color: "white" ,width:'40%',borderRadius:12,borderWidth:1}}>Remove exercise</Text>
                 </TouchableOpacity>
               )}
             </View>

@@ -49,7 +49,7 @@ def hello():
 # ======================================================
 SECRET_KEY = "SUPER_SECRET_KEY_CHANGE_ME"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 120
+ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 14
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
 

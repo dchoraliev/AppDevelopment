@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   RefreshControl,
   Alert,
+
 } from "react-native";
 import { Link, useFocusEffect, useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -40,12 +41,14 @@ function toArray(value) {
 
 export default function WorkoutsListScreen() {
   const router = useRouter();
-
+  //const theme = useTheme();
   const [workouts, setWorkouts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [hasToken, setHasToken] = useState(false);
-
+  const logout = () =>{
+    router.push('auth/login')
+  }
   const fetchWorkouts = async () => {
     try {
       setLoading(true);
@@ -71,7 +74,13 @@ export default function WorkoutsListScreen() {
       const data = await res.json();
       setWorkouts(Array.isArray(data) ? data : []);
     } catch (err) {
-      console.error(err.message);
+      if (err.message == "Token expired"){
+        Alert.alert("Session Expired","Please log in again")
+        logout();
+      }
+      else{
+        console.error(err.message);
+      }
       setWorkouts([]);
     } finally {
       setLoading(false);
@@ -128,13 +137,33 @@ export default function WorkoutsListScreen() {
       { cancelable: true }
     );
   };
-
+  function flattenExercisesByUser(rawMap) {
+    const out = {};
+  
+    const walk = (node, prefix) => {
+      if (!node || typeof node !== "object" || Array.isArray(node)) return;
+  
+      for (const [k, v] of Object.entries(node)) {
+        const nextKey = prefix ? `${prefix}.${k}` : k;
+  
+        if (Array.isArray(v)) {
+          const existing = out[nextKey];
+          if (!existing || existing.length < v.length) out[nextKey] = v;
+        } else if (v && typeof v === "object") {
+          walk(v, nextKey);
+        }
+      }
+    };
+  
+    walk(rawMap, "");
+    return out;
+  }
   const renderExercisesByUser = (workout) => {
     const rawMap = workout?.exercises_by_user;
-    const map =
-      rawMap && typeof rawMap === "object" && !Array.isArray(rawMap) ? rawMap : {};
-
-    const entries = Object.entries(map);
+  
+    const flat = flattenExercisesByUser(rawMap);
+  
+    const entries = Object.entries(flat);
     if (entries.length === 0) {
       return (
         <Text style={{ color: theme.colors.mutedText, fontSize: 12 }}>
@@ -142,18 +171,18 @@ export default function WorkoutsListScreen() {
         </Text>
       );
     }
-
+  
     return (
       <View style={{ gap: 12 }}>
         {entries.map(([email, exercisesRaw]) => {
           const exercises = toArray(exercisesRaw);
-
+  
           return (
             <View key={email} style={{ gap: 8 }}>
               <Text style={{ color: theme.colors.text, fontWeight: "800", fontSize: 13 }}>
                 {usernameFromEmail(email)}
               </Text>
-
+  
               {exercises.length === 0 ? (
                 <Text style={{ color: theme.colors.mutedText, fontSize: 12 }}>
                   No exercises added.
@@ -163,10 +192,10 @@ export default function WorkoutsListScreen() {
                   {exercises.map((ex, idx) => {
                     const w = normalizeWeight(ex?.weight);
                     const metaParts = [
-                      `${Number(ex?.sets ?? 0)} × ${Number(ex?.reps ?? 0)}`,
+                      `${Number(ex?.sets ?? 0)} x ${Number(ex?.reps ?? 0)}`,
                       w !== null ? `@ ${w} lb` : null,
                     ].filter(Boolean);
-
+  
                     return (
                       <View
                         key={`${email}-${idx}`}
@@ -199,6 +228,7 @@ export default function WorkoutsListScreen() {
       </View>
     );
   };
+  
 
   const renderItem = ({ item }) => {
     const workoutId = encodeURIComponent(String(item._id));
@@ -266,45 +296,16 @@ export default function WorkoutsListScreen() {
       <View style={layout.content}>
         <AppHeader />
 
-        <View style={[layout.navRow, { gap: theme.spacing.sm }]}>
-          {hasToken && (
-            <>
-              <Link href="/workouts/new" asChild>
-                <TouchableOpacity style={[layout.primaryButton, { flex: 1 }]}>
-                  <Text style={textStyles.primaryButtonText}>+ New workout</Text>
-                </TouchableOpacity>
-              </Link>
-
-              <Link href="/workouts/join" asChild>
-                <TouchableOpacity style={[layout.outlineButton, { width: 140 }]}>
-                  <Text style={textStyles.outlineButtonText}>Join workout</Text>
-                </TouchableOpacity>
-              </Link>
-            </>
-          )}
-
-          <View style={{ flexDirection: "row", gap: theme.spacing.xs }}>
-            <Link href="/auth/login" asChild>
-              <TouchableOpacity style={layout.outlineButton}>
-                <Text style={textStyles.outlineButtonText}>Login</Text>
-              </TouchableOpacity>
-            </Link>
-            <Link href="/auth/signup" asChild>
-              <TouchableOpacity style={layout.outlineButton}>
-                <Text style={textStyles.outlineButtonText}>Sign up</Text>
-              </TouchableOpacity>
-            </Link>
-          </View>
-        </View>
+        
 
         {loading ? (
           <ActivityIndicator size="large" color={theme.colors.primary} />
         ) : !hasToken ? (
           <View style={layout.emptyState}>
-            <Text style={textStyles.emptyTitle}>Not logged in</Text>
+            {/*<Text style={textStyles.emptyTitle}>Not logged in</Text>
             <Text style={textStyles.emptySubtitle}>
               Please log in to see your workouts.
-            </Text>
+            </Text>*/}
           </View>
         ) : workouts.length === 0 ? (
           <View style={layout.emptyState}>
@@ -323,6 +324,82 @@ export default function WorkoutsListScreen() {
             }
           />
         )}
+        <View style={[layout.navRow, { gap: theme.spacing.sm,paddingTop:10,borderWidth:0}]}>
+          {hasToken ? (
+            <>
+              <Link href="/workouts/new" asChild>
+                <TouchableOpacity style={layout.outlineButton}>
+                  <Text style={textStyles.outlineButtonText}>+ New workout</Text>
+                </TouchableOpacity>
+              </Link>
+
+              <Link href="/workouts/join" asChild>
+                <TouchableOpacity style={layout.outlineButton}>
+                  <Text style={textStyles.outlineButtonText}>Join workout</Text>
+                </TouchableOpacity>
+              </Link>
+            </>
+          ):
+          <>
+  <View
+    style={{
+      marginTop: 32,
+      padding: 20,
+      borderRadius: 20,
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+      backgroundColor: theme.colors.card,
+      alignItems: "center",
+      gap: theme.spacing.md,
+    }}
+  >
+    <Text
+      style={{
+        fontSize: 18,
+        fontWeight: "800",
+        color: theme.colors.text,
+      }}
+    >
+      Welcome to GymSync!
+    </Text>
+
+    <Text
+      style={{
+        fontSize: 13,
+        color: theme.colors.mutedText,
+        textAlign: "center",
+        marginBottom: theme.spacing.sm,
+      }}
+    >
+      Sign in to view your workouts, track progress, and join sessions.
+    </Text>
+
+    <View style={{ width: "100%", gap: theme.spacing.sm }}>
+      <Link href="/auth/login" asChild>
+        <TouchableOpacity style={layout.primaryButton}>
+          <Text
+            style={{
+              color: theme.colors.primaryText,
+              fontWeight: "800",
+            }}
+          >
+            Log In
+          </Text>
+        </TouchableOpacity>
+      </Link>
+
+      <Link href="/auth/signup" asChild>
+        <TouchableOpacity style={layout.outlineButton}>
+          <Text style={textStyles.outlineButtonText}>Create Account</Text>
+        </TouchableOpacity>
+      </Link>
+    </View>
+  </View>
+</>
+}
+
+          
+        </View>
       </View>
     </SafeAreaView>
   );

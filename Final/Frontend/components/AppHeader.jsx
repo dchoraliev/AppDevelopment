@@ -5,7 +5,7 @@ import { theme } from "../styles/theme";
 
 export default function AppHeader({
   title = "GymSync",
-  subtitle = "Create and track your custom workouts.",
+  //subtitle = "Create and track your custom workouts.",
 }) {
   return (
     <View
@@ -38,9 +38,9 @@ export default function AppHeader({
       {/* text truly centered on the screen */}
       <View style={{ alignItems: "center" }}>
         <Text style={textStyles.appTitle}>{title}</Text>
-        <Text style={[textStyles.appSubtitle, { textAlign: "center" }]}>
+        {/*<Text style={[textStyles.appSubtitle, { textAlign: "center" }]}>
           {subtitle}
-        </Text>
+        </Text>*/}
       </View>
     </View>
   );
